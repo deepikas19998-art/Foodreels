@@ -9,41 +9,44 @@ const Home = () => {
     // Autoplay behavior is handled inside ReelFeed
 
     useEffect(() => {
-        axios.get("http://localhost:3000/api/food", { withCredentials: true })
-            .then(response => {
+  axios.get(`${import.meta.env.VITE_API_URL}/api/food`, { withCredentials: true })
+    .then(response => {
+      console.log(response.data);
+      setVideos(response.data.foodItems);
+    })
+    .catch(() => { /* optionally handle error */ });
+}, []);
 
-                console.log(response.data);
+async function likeVideo(item) {
+  const response = await axios.post(
+    `${import.meta.env.VITE_API_URL}/api/food/like`,
+    { foodId: item._id },
+    { withCredentials: true }
+  );
 
-                setVideos(response.data.foodItems)
-            })
-            .catch(() => { /* noop: optionally handle error */ })
-    }, [])
+  if(response.data.like){
+    console.log("Video liked");
+    setVideos(prev => prev.map(v => v._id === item._id ? { ...v, likeCount: v.likeCount + 1 } : v));
+  }else{
+    console.log("Video unliked");
+    setVideos(prev => prev.map(v => v._id === item._id ? { ...v, likeCount: v.likeCount - 1 } : v));
+  }
+}
 
-    // Using local refs within ReelFeed; keeping map here for dependency parity if needed
+async function saveVideo(item) {
+  const response = await axios.post(
+    `${import.meta.env.VITE_API_URL}/api/food/save`,
+    { foodId: item._id },
+    { withCredentials: true }
+  );
 
-    async function likeVideo(item) {
+  if(response.data.save){
+    setVideos(prev => prev.map(v => v._id === item._id ? { ...v, savesCount: v.savesCount + 1 } : v));
+  }else{
+    setVideos(prev => prev.map(v => v._id === item._id ? { ...v, savesCount: v.savesCount - 1 } : v));
+  }
+}
 
-        const response = await axios.post("http://localhost:3000/api/food/like", { foodId: item._id }, {withCredentials: true})
-
-        if(response.data.like){
-            console.log("Video liked");
-            setVideos((prev) => prev.map((v) => v._id === item._id ? { ...v, likeCount: v.likeCount + 1 } : v))
-        }else{
-            console.log("Video unliked");
-            setVideos((prev) => prev.map((v) => v._id === item._id ? { ...v, likeCount: v.likeCount - 1 } : v))
-        }
-        
-    }
-
-    async function saveVideo(item) {
-        const response = await axios.post("http://localhost:3000/api/food/save", { foodId: item._id }, { withCredentials: true })
-        
-        if(response.data.save){
-            setVideos((prev) => prev.map((v) => v._id === item._id ? { ...v, savesCount: v.savesCount + 1 } : v))
-        }else{
-            setVideos((prev) => prev.map((v) => v._id === item._id ? { ...v, savesCount: v.savesCount - 1 } : v))
-        }
-    }
 
     return (
         <ReelFeed

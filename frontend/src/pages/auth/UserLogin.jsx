@@ -13,10 +13,11 @@ const UserLogin = () => {
     const email = e.target.email.value;
     const password = e.target.password.value;
 
-    const response = await axios.post("http://localhost:3000/api/auth/user/login", {
-      email,
-      password
-    }, { withCredentials: true });
+    axios.post(
+  `${import.meta.env.VITE_API_URL}/api/auth/user/login`,
+  { email, password },
+  { withCredentials: true }
+);
 
     console.log(response.data);
 
