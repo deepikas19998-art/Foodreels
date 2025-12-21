@@ -11,34 +11,39 @@ const FoodPartnerRegister = () => {
   const handleSubmit = (e) => { 
     e.preventDefault();
 
-    const businessName = e.target.businessName.value;
-    const contactName = e.target.contactName.value;
-    const phone = e.target.phone.value;
-    const email = e.target.email.value;
-    const password = e.target.password.value;
-    const address = e.target.address.value;
+    const handleRegister = async (e) => {
+  e.preventDefault();
 
-    const response =  axios.post(
-  `${import.meta.env.VITE_API_URL}/api/auth/food-partner/register`,
-  {
-    name: businessName,
-    contactName,
-    phone,
-    email,
-    password,
-    address
-  },
-  { withCredentials: true }
-)
-.then(response => {
-  console.log(response.data);
-  navigate("/create-food"); // Redirect after successful registration
-})
-.catch(error => {
-  console.error("There was an error registering!", error);
-});
+  const businessName = e.target.businessName.value;
+  const contactName = e.target.contactName.value;
+  const phone = e.target.phone.value;
+  const email = e.target.email.value;
+  const password = e.target.password.value;
+  const address = e.target.address.value;
 
-  };
+  try {
+    const response = await axios.post(
+      `${import.meta.env.VITE_API_URL}/api/auth/food-partner/register`,
+      {
+        name: businessName,
+        contactName,
+        phone,
+        email,
+        password,
+        address
+      },
+      { withCredentials: true }
+    );
+
+    console.log(response.data);
+    navigate("/create-food"); // Redirect after successful registration
+
+  } catch (error) {
+    console.error("There was an error registering!", error.response?.data || error);
+    alert(error.response?.data?.message || "Registration failed");
+  }
+}
+};
 
   return (
     <div className="auth-page-wrapper">

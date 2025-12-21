@@ -4,7 +4,6 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 const UserLogin = () => {
-
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -13,16 +12,20 @@ const UserLogin = () => {
     const email = e.target.email.value;
     const password = e.target.password.value;
 
-   const response = await axios.post(
-  `${import.meta.env.VITE_API_URL}/api/auth/user/login`,
-  { email, password },
-  { withCredentials: true }
-);
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_URL}/api/auth/user/login`,
+        { email, password },         // payload keys must match backend
+        { withCredentials: true }    // cookie-based auth
+      );
 
-    console.log(response.data);
+      console.log(response.data);
+      navigate("/");                 // Redirect to home after login
 
-    navigate("/"); // Redirect to home after login
-
+    } catch (error) {
+      console.error("User login failed:", error.response?.data || error);
+      alert(error.response?.data?.message || "Login failed");
+    }
   };
 
 

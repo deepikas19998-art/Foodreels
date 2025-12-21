@@ -9,18 +9,23 @@ const Profile = () => {
     const [ videos, setVideos ] = useState([])
 
     useEffect(() => {
-  axios.get(
-    `${import.meta.env.VITE_API_URL}/api/food-partner/${id}`,
-    { withCredentials: true }
-  )
-  .then(response => {
-    setProfile(response.data.foodPartner);
-    setVideos(response.data.foodPartner.foodItems);
-  })
-  .catch(err => {
-    console.error("Error fetching profile:", err);
-  });
-}, [id]);
+    const fetchProfile = async () => {
+      try {
+        const response = await axios.get(
+          `${import.meta.env.VITE_API_URL}/api/food-partner/${id}`,
+          { withCredentials: true }
+        );
+
+        setProfile(response.data.foodPartner);
+        setVideos(response.data.foodPartner.foodItems);
+      } catch (err) {
+        console.error("Error fetching profile:", err.response?.data || err);
+        alert(err.response?.data?.message || "Failed to fetch profile");
+      }
+    };
+
+    if (id) fetchProfile();
+  }, [id]);
 
     return (
         <main className="profile-page">

@@ -48,26 +48,30 @@ const CreateFood = () => {
     const openFileDialog = () => fileInputRef.current?.click();
 
     const onSubmit = async (e) => {
-        e.preventDefault();
+  e.preventDefault();
 
-        const formData = new FormData();
+  const formData = new FormData();
+  formData.append('name', name);
+  formData.append('description', description);
+  formData.append('video', videoFile);
 
-        formData.append('name', name);
-        formData.append('description', description);
-        formData.append("video", videoFile);
+  try {
+    const response = await axios.post(
+      `${import.meta.env.VITE_API_URL}/api/food`,
+      formData,
+      { withCredentials: true }
+    );
 
-        const response = await axios.post(
-  `${import.meta.env.VITE_API_URL}/api/food`,
-  formData,
-  { withCredentials: true }
-);
+    console.log(response.data);
+    navigate("/"); // Redirect after successful food creation
 
-        console.log(response.data);
-        navigate("/"); 
-        
-    };
+  } catch (error) {
+    console.error("Error creating food:", error.response?.data || error);
+    alert(error.response?.data?.message || "Failed to create food");
+  }
+};
 
-    const isDisabled = useMemo(() => !name.trim() || !videoFile, [ name, videoFile ]);
+const isDisabled = useMemo(() => !name.trim() || !videoFile, [name, videoFile]);
 
     return (
         <div className="create-food-page">

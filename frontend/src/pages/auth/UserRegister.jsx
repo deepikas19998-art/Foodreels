@@ -9,29 +9,32 @@ const UserRegister = () => {
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
-        e.preventDefault();
+  e.preventDefault();
 
-        const firstName = e.target.firstName.value;
-        const lastName = e.target.lastName.value;
-        const email = e.target.email.value;
-        const password = e.target.password.value;
+  const firstName = e.target.firstName.value;
+  const lastName = e.target.lastName.value;
+  const email = e.target.email.value;
+  const password = e.target.password.value;
 
-const response = await axios.post(
-  `${import.meta.env.VITE_API_URL}/api/auth/user/register`,
-  {
-    fullName: firstName + " " + lastName,
-    email,
-    password
-  },
-  {
-    withCredentials: true
+  try {
+    const response = await axios.post(
+      `${import.meta.env.VITE_API_URL}/api/auth/user/register`,
+      {
+        fullName: firstName + " " + lastName,
+        email,
+        password
+      },
+      { withCredentials: true }
+    );
+
+    console.log(response.data);
+    navigate("/"); // Redirect after successful registration
+
+  } catch (error) {
+    console.error("User registration failed:", error.response?.data || error);
+    alert(error.response?.data?.message || "Registration failed");
   }
-);
-        console.log(response.data);
-
-        navigate("/")
-
-    };
+};
 
     return (
         <div className="auth-page-wrapper">
