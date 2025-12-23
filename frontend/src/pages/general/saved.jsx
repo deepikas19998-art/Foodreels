@@ -4,9 +4,7 @@ import axios from 'axios'
 import ReelFeed from '../../components/ReelFeed'
 
 
-import { useState, useEffect } from "react";
-import axios from "axios";
-import ReelFeed from "./ReelFeed";
+
 
 const Saved = () => {
   const [videos, setVideos] = useState([]);
