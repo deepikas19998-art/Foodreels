@@ -1,17 +1,17 @@
-import React, { useEffect, useState } from 'react'
-import '../styles/reels.css'
-import axios from 'axios'
-import ReelFeed from '../components/ReelFeed'
-
-
-
+import React, { useEffect, useState } from 'react';
+import '../styles/reels.css';
+import axios from 'axios';
+import ReelFeed from '../components/ReelFeed';
 
 const Saved = () => {
   const [videos, setVideos] = useState([]);
+  const [loading, setLoading] = useState(true); // Loading state
+  const [error, setError] = useState(null);     // Error state
 
   useEffect(() => {
     const fetchSavedFoods = async () => {
       try {
+        setLoading(true);
         const response = await axios.get(
           `${import.meta.env.VITE_API_URL}/api/food/save`,
           { withCredentials: true }
@@ -30,7 +30,9 @@ const Saved = () => {
         setVideos(savedFoods);
       } catch (err) {
         console.error("Error fetching saved foods:", err.response?.data || err);
-        alert("Failed to fetch saved videos");
+        setError("Failed to fetch saved videos.");
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -58,9 +60,17 @@ const Saved = () => {
     }
   };
 
+  if (loading) {
+    return <div className="loading">Loading saved videos...</div>;
+  }
+
+  if (error) {
+    return <div className="error">{error}</div>;
+  }
+
   return (
     <ReelFeed
-      items={videos}
+      videos={videos}          // prop name consistent with ReelFeed
       onSave={removeSaved}
       emptyMessage="No saved videos yet."
     />
