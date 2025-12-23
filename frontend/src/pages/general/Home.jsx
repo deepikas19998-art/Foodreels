@@ -4,9 +4,6 @@ import '../../styles/reels.css'
 import ReelFeed from '../../components/ReelFeed'
 
 
-import { useState, useEffect } from "react";
-import axios from "axios";
-import ReelFeed from "./ReelFeed"; // assuming you have this component
 
 const Home = () => {
   const [videos, setVideos] = useState([]);
