@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import axios from 'axios';
-import '../../styles/create-food.css';
+import '../styles/create-food.css';
 import { useNavigate } from 'react-router-dom';
 
 const CreateFood = () => {
