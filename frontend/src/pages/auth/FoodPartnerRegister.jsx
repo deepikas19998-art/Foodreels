@@ -61,3 +61,5 @@ const FoodPartnerRegister = () => {
     </div>
   );
 };
+
+export default FoodPartnerRegister;
