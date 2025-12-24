@@ -20,8 +20,7 @@ const UserLogin = () => {
       );
 
       console.log(response.data);
-      navigate("/");   
-      window.location.reload();              // Redirect to home after login
+      navigate("/");                // Redirect to home after login
 
     } catch (error) {
       console.error("User login failed:", error.response?.data || error);
